@@ -7,12 +7,14 @@ then
   echo "Usage: $0 [ \"steamapps directory\" ]"
   echo "This program will look through all compdata folders"
   echo "and give you the Steam Titles."
+  exit
 fi
 
-for dir in "$steamappsPath"/compdata/*
+for dir in "$steamappsPath"/compatdata/*
 do
   steamId=$(basename "$dir")
-  echo "$steamId"
-done
+  steamId=${steamId%\n}
+  title=$(curl -s "https://store.steampowered.com/api/appdetails/?appids=$steamId" | jq ".[].data.name")
 
-#curl "https://store.steampowered.com/api/appdetails/?appids=200260" | python3 -c "import sys, json; print(json.load(sys.stdin)['200260']['data']['name'])"
+  echo "$steamId: $title"
+done
