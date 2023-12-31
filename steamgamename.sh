@@ -12,9 +12,14 @@ fi
 
 for dir in "$steamappsPath"/compatdata/*
 do
+  isInstalled=""
   steamId=$(basename "$dir")
   steamId=${steamId%\n}
   title=$(curl -s "https://store.steampowered.com/api/appdetails/?appids=$steamId" | jq ".[].data.name")
+  if test -f "../appmanifest_$steamId.acf"
+  then
+    isInstalled="[ installed ]"
+  fi
 
-  echo "$steamId: $title"
+  echo "$steamId: $title $isInstalled"
 done
